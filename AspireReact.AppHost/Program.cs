@@ -15,7 +15,19 @@ var weatherDatabase = builder.AddPostgres(
         "/docker-entrypoint-initdb.d")
     .AddDatabase(db_name);
 
-// To get inside the container, run: docker exec -it {PID} psql -U AspireIsAwesome -d aspiringreact 
+var ollama = builder.AddContainer("ollama", "ollama/ollama")
+    .WithVolume("/root/.ollama")
+    .WithBindMount("./ollama-config", "/root/")
+    .WithEntrypoint("/root/entrypoint.sh")
+    .WithHttpEndpoint(port: 11434, targetPort: 11434, name: "OllamaOpenApiEndpointUri")
+    // .WithContainerRuntimeArgs("--gpus=all")
+    ;
+
+var ollamaOpenApiEndpointUri = ollama.GetEndpoint("OllamaOpenApiEndpointUri");
+
+var ollamaService = builder.AddPythonProject("ollamaservice", "../aspiring-ollama-service", "main.py")
+    .WithEndpoint(env: "PORT")
+    .WithEnvironment("OllamaOpenApiEndpointUri", ollamaOpenApiEndpointUri);
 
 var apiService = builder
     .AddProject<Projects.AspireReact_ApiService>("apiservice")
@@ -25,6 +37,7 @@ builder.AddNpmApp("react", "../aspiring-react")
     .WithExternalHttpEndpoints()
     .WithReference(cache)
     .WithReference(apiService)
+    .WithReference(ollamaService)
     .WithEnvironment("BROWSER", "none")
     .WithHttpEndpoint(env: "PORT")
     .PublishAsDockerFile();
