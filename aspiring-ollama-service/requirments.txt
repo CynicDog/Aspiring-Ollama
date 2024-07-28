@@ -1,1 +1,5 @@
-Flask==3.0.3
+Flask==2.2.0
+werkzeug==2.2.0
+langchain
+langchain_community
+requests

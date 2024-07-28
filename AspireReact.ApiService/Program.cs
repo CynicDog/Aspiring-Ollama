@@ -16,7 +16,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
-app.MapGet("/weatherforecast", async (NpgsqlDataSource dataSource) =>
+app.MapGet("/forecast", async (NpgsqlDataSource dataSource) =>
 {
     using var conn = dataSource.CreateConnection();
     await conn.OpenAsync();
