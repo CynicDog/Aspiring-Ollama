@@ -5,10 +5,7 @@ const WeatherAPI = () => {
 
     const requestWeather = async () => {
         const weather = await fetch("/weather/forecast");
-        console.log(weather);
-
         const weatherJson = await weather.json();
-        console.log(weatherJson);
 
         setForecasts(weatherJson);
     };
@@ -20,7 +17,7 @@ const WeatherAPI = () => {
     return (
         <div style={{marginTop: '50px'}}>
             <h3>Weather API service / PostgreSQL DB</h3>
-            <div style={{border: '1px solid', borderRadius: '5px', margin: '10px', padding: '10px'}}>
+            <div style={{border: '1px solid', borderRadius: '5px', margin: '10px', padding: '10px', display: 'flex', justifyContent: 'center'}}>
                 <table>
                     <thead>
                     <tr>

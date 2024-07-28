@@ -1,7 +1,7 @@
 import os
 import flask
 import requests
-from flask import request, jsonify
+from flask import request, jsonify, Response
 
 app = flask.Flask(__name__)
 base_url = os.environ.get('OllamaOpenApiEndpointUri')
@@ -36,10 +36,34 @@ def get_models():
         url = f'{base_url}/api/tags'
         response = requests.get(url)
 
-        if response.status_code != 200:
-            return jsonify({"error": "Failed to fetch models"}), response.status_code
-
         return response.json(), 200
+    
+    except Exception as e:
+        return str(e), 500
+
+@app.route('/api/generate', methods=['POST'])
+def generate_chat():
+    try:
+        data = request.get_json()
+        model_name = data.get('model')
+        prompt = data.get('prompt')
+
+        if not model_name or not prompt:
+            return jsonify({"error": "Model name and prompt are required"}), 400
+
+        payload = {
+            "model": model_name,
+            "prompt": prompt
+        }
+        url = f'{base_url}/api/generate'
+        response = requests.post(url, json=payload, stream=True)
+
+        def generate():
+            for chunk in response.iter_lines():
+                if chunk:
+                    yield chunk.decode('utf-8') + '\n'
+
+        return Response(generate(), content_type='application/json')
 
     except Exception as e:
         return str(e), 500
