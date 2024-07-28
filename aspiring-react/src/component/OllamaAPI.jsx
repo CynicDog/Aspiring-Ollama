@@ -3,14 +3,16 @@ import { useState, useEffect } from 'react';
 const OllamaAPI = () => {
     const [models, setModels] = useState([]);
     const [selectedModel, setSelectedModel] = useState('qwen2:0.5b');
-    const [availableModels, setAvailableModels] = useState(['qwen2:0.5b', 'qwen2:1.5b', 'phi3']);
+    const [availableModels, setAvailableModels] = useState(['qwen2:0.5b', 'qwen2:1.5b', 'phi3:latest']);
     const [loading, setLoading] = useState(false);
+    const [loadingProgress, setLoadingProgress] = useState(0);
     const [activeModel, setActiveModel] = useState(null);
     const [prompt, setPrompt] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
 
     const pullModel = async () => {
         setLoading(true);
+        setLoadingProgress(0);
         const response = await fetch("/ollama/api/pull", {
             method: "POST",
             headers: {
@@ -18,7 +20,36 @@ const OllamaAPI = () => {
             },
             body: JSON.stringify({ name: selectedModel })
         });
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+
+        const readStream = async () => {
+            let total = 0;
+            let progress = 0;
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n').filter(line => line.trim() !== '');
+                lines.forEach(line => {
+                    const data = JSON.parse(line);
+                    const status = data.status.split(' ')[0];  // Take the first word of the status
+                    if (status === 'pulling' && 'total' in data && 'completed' in data) {
+                        total = data.total;
+                        progress = data.completed;
+                        setLoadingProgress((progress / total) * 100);
+                    }
+                    if (status === 'completed') {
+                        setLoadingProgress(100);
+                    }
+                });
+            }
+        };
+
+        await readStream();
         await fetchModels();
+        
         setLoading(false);
     };
 
@@ -27,7 +58,7 @@ const OllamaAPI = () => {
         const result = await response.json();
         setModels(result.models);
         const pulledModels = result.models.map(model => model.model);
-        setAvailableModels(['qwen2:0.5b', 'qwen2:1.5b', 'phi3'].filter(model => !pulledModels.includes(model)));
+        setAvailableModels(['qwen2:0.5b', 'qwen2:1.5b', 'phi3:latest'].filter(model => !pulledModels.includes(model)));
     };
 
     const handleModelChange = (event) => {
@@ -63,16 +94,16 @@ const OllamaAPI = () => {
 
         const readStream = async () => {
             let generatedMessage = '';
-            
+
             while (true) {
                 const { value, done } = await reader.read();
                 if (done) break;
                 const chunk = decoder.decode(value, { stream: true });
                 const lines = chunk.split('\n').filter(line => line.trim() !== '');
                 const newResponses = lines.map(line => JSON.parse(line).response).join(' ');
-            
+
                 generatedMessage += newResponses;
-            
+
                 setChatHistory(prevChatHistory => {
                     const updatedChatHistory = [...prevChatHistory];
                     updatedChatHistory[updatedChatHistory.length - 1] = { sender: 'ai', message: generatedMessage };
@@ -101,7 +132,10 @@ const OllamaAPI = () => {
                         ))}
                     </select>
                     {loading ? (
-                        <div className="spinner" style={{ marginLeft: 'auto' }}></div>
+                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+                            <div className="spinner" style={{ marginRight: '10px' }}></div>
+                            <span>{Math.round(loadingProgress)}%</span>
+                        </div>
                     ) : (
                         <button onClick={pullModel} style={{ marginLeft: 'auto' }}>Pull Model</button>
                     )}

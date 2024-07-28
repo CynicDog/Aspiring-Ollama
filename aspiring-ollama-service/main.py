@@ -23,9 +23,14 @@ def pull_model():
             "name": model_name
         }
         url = f'{base_url}/api/pull'
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=payload, stream=True)
 
-        return response.json(), response.status_code
+        def generate():
+            for chunk in response.iter_lines():
+                if chunk:
+                    yield chunk.decode('utf-8') + '\n'
+
+        return Response(generate(), content_type='application/json')
 
     except Exception as e:
         return str(e), 500
@@ -37,7 +42,7 @@ def get_models():
         response = requests.get(url)
 
         return response.json(), 200
-    
+
     except Exception as e:
         return str(e), 500
 
