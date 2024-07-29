@@ -4,7 +4,7 @@ import requests
 from flask import request, jsonify, Response
 
 app = flask.Flask(__name__)
-base_url = os.environ.get('OllamaOpenApiEndpointUri')
+base_url = os.environ.get('ollama-uri')
 
 @app.route('/', methods=['GET'])
 def hello_world():

@@ -25,16 +25,16 @@ var ollama = builder
     // .WithVolume("/root/.ollama")
     // .WithBindMount("./ollama-config", "/root/")
     // .WithEntrypoint("/root/entrypoint.sh")
-    .WithHttpEndpoint(port: 11434, targetPort: 11434, name: "OllamaOpenApiEndpointUri")
-    .WithContainerRuntimeArgs("--gpus=all")
+    .WithHttpEndpoint(port: 11434, targetPort: 11434, name: "ollama-uri")
+    // .WithContainerRuntimeArgs("--gpus=all")
     ;
 
-var ollamaOpenApiEndpointUri = ollama.GetEndpoint("OllamaOpenApiEndpointUri");
+var ollamaOpenApiEndpointUri = ollama.GetEndpoint("ollama-uri");
 
 var ollamaService = builder
     .AddPythonProject("ollamaservice", "../aspiring-ollama-service", "main.py")
     .WithHttpEndpoint(env: "PORT", port: 8888) // sticky port setting for Dockerfile deploy 
-    .WithEnvironment("OllamaOpenApiEndpointUri", ollamaOpenApiEndpointUri)
+    .WithEnvironment("ollama-uri", ollamaOpenApiEndpointUri)
     ;
 
 builder.AddNpmApp("react", "../aspiring-react")
@@ -43,8 +43,8 @@ builder.AddNpmApp("react", "../aspiring-react")
     .WithReference(apiService)
     .WithReference(ollamaService)
     .WithEnvironment("BROWSER", "none")
-    .WithHttpEndpoint(env: "PORT")
-    // .PublishAsDockerFile()
+    .WithHttpEndpoint(env: "PORT", port: 9999) // sticky port setting for Dockerfile deploy
+    .PublishAsDockerFile()
     ;
 
 builder.Build().Run();
