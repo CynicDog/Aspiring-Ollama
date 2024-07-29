@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const OllamaAPI = () => {
     const [models, setModels] = useState([]);
     const [selectedModel, setSelectedModel] = useState('qwen2:0.5b');
-    const [availableModels, setAvailableModels] = useState(['qwen2:0.5b', 'qwen2:1.5b', 'phi3:latest']);
+    const [availableModels, setAvailableModels] = useState(['qwen2:0.5b', 'qwen2:1.5b', 'phi3:latest', 'llama3.1:latest']);
     const [loading, setLoading] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [activeModel, setActiveModel] = useState(null);
@@ -58,7 +58,7 @@ const OllamaAPI = () => {
         const result = await response.json();
         setModels(result.models);
         const pulledModels = result.models.map(model => model.model);
-        setAvailableModels(['qwen2:0.5b', 'qwen2:1.5b', 'phi3:latest'].filter(model => !pulledModels.includes(model)));
+        setAvailableModels(['qwen2:0.5b', 'qwen2:1.5b', 'phi3:latest', 'llama3.1:latest'].filter(model => !pulledModels.includes(model)));
     };
 
     const handleModelChange = (event) => {
@@ -178,7 +178,7 @@ const OllamaAPI = () => {
                                     padding: '10px',
                                     marginBottom: '10px',
                                     width: '100%',
-                                    maxWidth: '380px',
+                                    maxWidth: '395px',
                                     wordWrap: 'break-word',
                                     whiteSpace: 'pre-wrap',
                                     backgroundColor: '#f9f9f9',
