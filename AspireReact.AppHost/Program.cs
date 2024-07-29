@@ -21,20 +21,21 @@ var apiService = builder
     .WithReference(weatherDatabase);
 
 var ollama = builder
-        .AddContainer("ollama", "ollama/ollama")
-        // .WithVolume("/root/.ollama")
-        // .WithBindMount("./ollama-config", "/root/")
-        // .WithEntrypoint("/root/entrypoint.sh")
-        .WithHttpEndpoint(port: 11434, targetPort: 11434, name: "OllamaOpenApiEndpointUri")
-        // .WithContainerRuntimeArgs("--gpus=all")
+    .AddContainer("ollama", "ollama/ollama")
+    // .WithVolume("/root/.ollama")
+    // .WithBindMount("./ollama-config", "/root/")
+    // .WithEntrypoint("/root/entrypoint.sh")
+    .WithHttpEndpoint(port: 11434, targetPort: 11434, name: "OllamaOpenApiEndpointUri")
+    .WithContainerRuntimeArgs("--gpus=all")
     ;
 
 var ollamaOpenApiEndpointUri = ollama.GetEndpoint("OllamaOpenApiEndpointUri");
 
 var ollamaService = builder
     .AddPythonProject("ollamaservice", "../aspiring-ollama-service", "main.py")
-    .WithHttpEndpoint(env: "PORT")
-    .WithEnvironment("OllamaOpenApiEndpointUri", ollamaOpenApiEndpointUri);
+    .WithHttpEndpoint(env: "PORT", port: 8888) // sticky port setting for Dockerfile deploy 
+    .WithEnvironment("OllamaOpenApiEndpointUri", ollamaOpenApiEndpointUri)
+    ;
 
 builder.AddNpmApp("react", "../aspiring-react")
     .WithExternalHttpEndpoints()
@@ -43,6 +44,7 @@ builder.AddNpmApp("react", "../aspiring-react")
     .WithReference(ollamaService)
     .WithEnvironment("BROWSER", "none")
     .WithHttpEndpoint(env: "PORT")
-    .PublishAsDockerFile();
+    // .PublishAsDockerFile()
+    ;
 
 builder.Build().Run();
