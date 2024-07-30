@@ -7,7 +7,8 @@ console.log('Ollama Service Target:', process.env.services__ollamaservice__https
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: process.env.PORT ? parseInt(process.env.PORT) : 4001,
+    host: '0.0.0.0',
+    port: process.env.PORT ? parseInt(process.env.PORT) : 4173,
     proxy: {
       '/weather': {
         target: process.env.services__apiservice__https__0 || process.env.services__apiservice__http__0,

@@ -12,10 +12,10 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
 
 # Set environment variables
-ENV PORT=8888
+ENV PORT=8000
 
 # Expose the port the app runs on
-EXPOSE 8888
+EXPOSE 8000
 
 # Run the application
 CMD ["python", "main.py"]
