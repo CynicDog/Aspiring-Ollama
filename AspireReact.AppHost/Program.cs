@@ -43,7 +43,7 @@ builder.AddNpmApp("react", "../aspiring-react")
     .WithReference(apiService)
     .WithReference(ollamaService)
     .WithEnvironment("BROWSER", "none")
-    .WithHttpEndpoint(env: "PORT", port: 9999) // sticky port setting for Dockerfile deploy
+    .WithHttpEndpoint(env: "PORT", port: 4173, targetPort: 4173) // sticky port setting for Dockerfile deploy
     .PublishAsDockerFile()
     ;
 

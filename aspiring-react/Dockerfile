@@ -18,10 +18,10 @@ COPY . .
 RUN npm run build
 
 # Set environment variables
-ENV PORT=9999
+ENV PORT=4173
 
 # Expose port 9999
-EXPOSE 9999
+EXPOSE 4173
 
 # Command to run the application
 CMD ["npm", "run", "preview", "--host"]
