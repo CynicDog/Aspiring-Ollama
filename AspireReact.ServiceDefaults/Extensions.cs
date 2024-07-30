@@ -21,6 +21,9 @@ public static class Extensions
         builder.AddDefaultHealthChecks();
 
         builder.Services.AddServiceDiscovery();
+        // TODO: test required to see if these are necessary
+        builder.Services.AddServiceDiscovery();
+        builder.Services.AddDnsSrvServiceEndpointProvider();
 
         builder.Services.ConfigureHttpClientDefaults(http =>
         {
