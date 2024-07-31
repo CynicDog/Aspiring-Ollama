@@ -29,4 +29,8 @@ flowchart TD
   <summary>Aspire Dashboard 👨‍🏫</summary>
   <img src="https://github.com/user-attachments/assets/b558e398-d955-4ccd-afbb-6a529416298e"></img>
 </details>
- 
+
+<details>
+  <summary>Local Kubernetes deployment details ⚓</summary>
+  <img src="https://github.com/user-attachments/assets/9db18082-ad24-4e12-ab2b-33093cfb7f89"></img>
+</details>
