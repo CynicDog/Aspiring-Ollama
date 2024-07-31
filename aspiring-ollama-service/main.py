@@ -4,7 +4,14 @@ import requests
 from flask import request, jsonify, Response
 
 app = flask.Flask(__name__)
-base_url = os.environ.get('ollama-uri')
+raw_base_url = os.environ.get('ollama-uri')
+
+def ensure_http_prefix(url):
+    if not url.startswith('http://'):
+        return 'http://' + url
+    return url
+
+base_url = ensure_http_prefix(raw_base_url)
 
 @app.route('/', methods=['GET'])
 def hello_world():
@@ -22,7 +29,7 @@ def pull_model():
         payload = {
             "name": model_name
         }
-        url = f'http://{base_url}/api/pull'
+        url = f'{base_url}/api/pull'
         response = requests.post(url, json=payload, stream=True)
 
         def generate():
@@ -38,7 +45,7 @@ def pull_model():
 @app.route('/api/tags', methods=['GET'])
 def get_models():
     try:
-        url = f'http://{base_url}/api/tags'
+        url = f'{base_url}/api/tags'
         response = requests.get(url)
 
         return response.json(), 200
@@ -60,10 +67,10 @@ def generate_chat():
             "model": model_name,
             "prompt": prompt
         }
-        url = f'http://{base_url}/api/generate'
+        url = f'{base_url}/api/generate'
         response = requests.post(url, json=payload, stream=True)
 
-        def generate(): 
+        def generate():
             for chunk in response.iter_lines():
                 if chunk:
                     yield chunk.decode('utf-8') + '\n'
@@ -74,5 +81,8 @@ def generate_chat():
         return str(e), 500
 
 if __name__ == '__main__':
+    
+    print(f'target url: {base_url}')
+    
     port = int(os.environ.get('PORT', 8000))
     app.run(host='0.0.0.0', port=port)

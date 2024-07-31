@@ -4,10 +4,15 @@ const WeatherAPI = () => {
     const [forecasts, setForecasts] = useState([]);
 
     const requestWeather = async () => {
-        const weather = await fetch("/weather/forecast");
-        const weatherJson = await weather.json();
+        try {
+            const weather = await fetch("/weather/forecast");
+            const weatherJson = await weather.json();
 
-        setForecasts(weatherJson);
+            setForecasts(weatherJson);
+        } catch (error) {
+            console.error("Failed to fetch weather data:", error);
+            setForecasts([]); 
+        }
     };
 
     useEffect(() => {
@@ -15,9 +20,9 @@ const WeatherAPI = () => {
     }, []);
 
     return (
-        <div style={{marginTop: '50px'}}>
+        <div style={{ marginTop: '50px' }}>
             <h3>Weather API service / PostgreSQL DB</h3>
-            <div style={{border: '1px solid', borderRadius: '5px', margin: '10px', padding: '10px', display: 'flex', justifyContent: 'center'}}>
+            <div style={{ border: '1px solid', borderRadius: '5px', margin: '10px', padding: '10px', display: 'flex', justifyContent: 'center' }}>
                 <table>
                     <thead>
                     <tr>
@@ -28,25 +33,20 @@ const WeatherAPI = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {(
-                        forecasts ?? [
-                            {
-                                date: "N/A",
-                                temperatureC: "",
-                                temperatureF: "",
-                                summary: "No forecasts",
-                            },
-                        ]
-                    ).map((w) => {
-                        return (
+                    {forecasts && forecasts.length > 0 ? (
+                        forecasts.map((w) => (
                             <tr key={w.date}>
                                 <td>{w.date}</td>
                                 <td>{w.temperatureC}</td>
                                 <td>{w.temperatureF}</td>
                                 <td>{w.summary}</td>
                             </tr>
-                        );
-                    })}
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">No forecasts available</td>
+                        </tr>
+                    )}
                     </tbody>
                 </table>
             </div>
