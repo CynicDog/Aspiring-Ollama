@@ -1,4 +1,4 @@
-Flask==2.2.0
+Flask==2.2.5
 werkzeug==2.2.0
 langchain
 langchain_community
