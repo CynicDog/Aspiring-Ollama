@@ -8,16 +8,15 @@ flowchart TD
     B --> E([Containerized Ollama])
     A --> C([.NET weather API server])
     C --> D([Containerized PostgreSQL])
-    F([Aspire AppHost]) --- |react.bindings.http.targetPort| A
-    F --- |ollamaservice.bindings.http.targetPort| B
-    F --- |apiservice.bindings.http.targetPort| C
-    F --- |connectionString| D
-    F --- |ollama.bindings.ollama-uri.url| E
+    F([Aspire AppHost]) --- |ollamaservice.bindings.http.targetPort| A
+    F --- |apiservice.bindings.http.targetPort| A
+    F --- |connectionString| C
+    F --- |ollama.bindings.ollama-uri.url| B
      
     classDef container stroke:#333,stroke-width:1px;
     class A,B,C,D,E container;
 
-    linkStyle 4,5,6,7,8 stroke-width:.3px,color:grey;
+    linkStyle 4,5,6,7 stroke-width:.3px,color:grey;
 ```
 
 <details>
