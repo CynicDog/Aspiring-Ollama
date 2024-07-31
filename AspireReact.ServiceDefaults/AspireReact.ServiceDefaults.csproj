@@ -11,7 +11,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
 
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.3.0" />
-    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="8.1.0" />
     
     <!--TODO: test required to see if these are necessary-->
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Dns" Version="8.0.0" />
