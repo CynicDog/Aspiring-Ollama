@@ -1,3 +1,5 @@
+#### Read more about the project in [my article](https://cynicdog.github.io/posts/azure-aspire-with-containerized-ollama/). 📰
+
 #### Architecture of AspirngOllama 
 ``` mermaid
 flowchart TD
