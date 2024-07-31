@@ -16,7 +16,7 @@ var weatherDatabase = builder
         "/docker-entrypoint-initdb.d")
     .AddDatabase(db_name);
 
-var apiService = builder
+var weatherService = builder
     .AddProject<Projects.AspireReact_ApiService>("apiservice")
     .WithReference(weatherDatabase);
 
@@ -35,7 +35,7 @@ var ollamaService = builder
 builder.AddNpmApp("react", "../aspiring-react")
     .WithExternalHttpEndpoints()
     .WithReference(cache)
-    .WithReference(apiService)
+    .WithReference(weatherService)
     .WithReference(ollamaService)
     .WithEnvironment("BROWSER", "none")
     .WithHttpEndpoint(env: "PORT", port: 4173, targetPort: 5173) // sticky port setting for Dockerfile deploy
