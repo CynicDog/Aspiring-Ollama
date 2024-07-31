@@ -12,11 +12,12 @@ flowchart TD
     F --- |apiservice.bindings.http.targetPort| A
     F --- |connectionString| C
     F --- |ollama.bindings.ollama-uri.url| B
+    F --- |db credentials, init.d| D
      
     classDef container stroke:#333,stroke-width:1px;
     class A,B,C,D,E container;
 
-    linkStyle 4,5,6,7 stroke-width:.3px,color:grey;
+    linkStyle 4,5,6,7,8 stroke-width:.3px,color:grey;
 ```
 
 <details>
