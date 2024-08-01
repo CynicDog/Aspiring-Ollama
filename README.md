@@ -8,11 +8,11 @@ flowchart TD
     B --> E([Containerized Ollama])
     A --> C([.NET weather API server])
     C --> D([Containerized PostgreSQL])
-    F([Aspire AppHost]) --- |ollamaservice.bindings.http.targetPort| A
-    F --- |apiservice.bindings.http.targetPort| A
-    F --- |connectionString| C
-    F --- |ollama.bindings.ollama-uri.url| B
-    F --- |db credentials, init.d| D
+    F([Aspire AppHost]) -. ollamaservice_bindings_http_targetPort .- A
+    F -. apiservice_bindings_http_targetPort .- A
+    F -. connectionString .- C
+    F -. ollama_bindings_ollama-uri_url .- B
+    F -. db credentials, init_d .- D
      
     classDef container stroke:#333,stroke-width:1px;
     class A,B,C,D,E container;
