@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json.schemastore.org/aspire-8.0.json",
+  "resources": {
+    "cache": {
+      "type": "container.v0",
+      "connectionString": "{cache.bindings.tcp.host}:{cache.bindings.tcp.port}",
+      "image": "docker.io/library/redis:7.2",
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 6379
+        }
+      }
+    },
+    "psql-username": {
+      "type": "parameter.v0",
+      "value": "{psql-username.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true
+        }
+      }
+    },
+    "psql-password": {
+      "type": "parameter.v0",
+      "value": "{psql-password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true
+        }
+      }
+    },
+    "postgres": {
+      "type": "container.v0",
+      "connectionString": "Host={postgres.bindings.tcp.host};Port={postgres.bindings.tcp.port};Username={psql-username.value};Password={psql-password.value}",
+      "image": "docker.io/library/postgres:16.2",
+      "bindMounts": [
+        {
+          "source": "../AspireReact.ApiService/data/postgres",
+          "target": "/docker-entrypoint-initdb.d",
+          "readOnly": false
+        }
+      ],
+      "env": {
+        "POSTGRES_HOST_AUTH_METHOD": "scram-sha-256",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256",
+        "POSTGRES_USER": "{psql-username.value}",
+        "POSTGRES_PASSWORD": "{psql-password.value}",
+        "POSTGRES_DB": "aspiringreact"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 5432
+        }
+      }
+    },
+    "aspiringreact": {
+      "type": "value.v0",
+      "connectionString": "{postgres.connectionString};Database=aspiringreact"
+    },
+    "apiservice": {
+      "type": "project.v0",
+      "path": "../AspireReact.ApiService/AspireReact.ApiService.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "HTTP_PORTS": "{apiservice.bindings.http.targetPort}",
+        "ConnectionStrings__aspiringreact": "{aspiringreact.connectionString}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "ollama": {
+      "type": "container.v0",
+      "image": "ollama/ollama:latest",
+      "bindings": {
+        "ollama-uri": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "targetPort": 11434
+        }
+      }
+    },
+    "ollamaservice": {
+      "type": "dockerfile.v0",
+      "path": "../aspiring-ollama-service/Dockerfile",
+      "context": "../aspiring-ollama-service",
+      "env": {
+        "PORT": "{ollamaservice.bindings.http.targetPort}",
+        "ollama-uri": "{ollama.bindings.ollama-uri.url}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "targetPort": 8000
+        }
+      }
+    },
+    "react": {
+      "type": "dockerfile.v0",
+      "path": "../aspiring-react/Dockerfile",
+      "context": "../aspiring-react",
+      "env": {
+        "NODE_ENV": "development",
+        "ConnectionStrings__cache": "{cache.connectionString}",
+        "services__apiservice__http__0": "{apiservice.bindings.http.url}",
+        "services__apiservice__https__0": "{apiservice.bindings.https.url}",
+        "services__ollamaservice__http__0": "{ollamaservice.bindings.http.url}",
+        "BROWSER": "none",
+        "PORT": "{react.bindings.http.targetPort}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "port": 4173,
+          "targetPort": 5173
+        }
+      }
+    }
+  }
+}
