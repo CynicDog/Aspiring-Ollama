@@ -20,6 +20,24 @@ flowchart TD
     linkStyle 4,5,6,7,8 stroke-width:.3px,color:grey;
 ```
 
+#### Reverse proxy details
+```mermaid
+flowchart TD
+    
+    A([React UI Client]) --> |ollamaservice:8000| B(Reverse Proxy)
+    B --> |localhost:RANDOM_PORT| E([Python Ollama server])
+    A --> |apiservice:8080| C(Reverse Proxy)
+    C --> |localhost:RANDOM_PORT| D([Containerized PostgreSQL])
+    F(Kubernetes) -. NodePort .- A 
+    F -. NodePort .- D
+    F -. NodePort .- E
+
+    classDef container stroke:#333,stroke-width:1px;
+    class B,C container;
+
+    linkStyle 4,5,6 stroke-width:.2px,color:grey;
+```
+
 <details>
   <summary>First look in to the app 👀</summary>
   <img src="https://github.com/user-attachments/assets/0411f62d-2976-4c6d-a5a4-a42440a33013"></img>
