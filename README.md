@@ -15,7 +15,16 @@ flowchart TD
     F -. db credentials, init_d .- D
      
     classDef container stroke:#333,stroke-width:1px;
-    class A,B,C,D,E container;
+    class A,C,D,E container;
+
+    classDef react stroke:#BBDEFB,stroke-width:2px;
+    class A react
+
+    classDef python stroke:#2962FF,stroke-width:2px;
+    class B python
+
+    classDef dotnet stroke:#A020F0,stroke-width:2px;
+    class C dotnet
 
     linkStyle 4,5,6,7,8 stroke-width:.3px,color:grey;
 ```
@@ -34,6 +43,15 @@ flowchart TD
 
     classDef container stroke:#333,stroke-width:1px;
     class B,C container;
+
+    classDef react stroke:#BBDEFB,stroke-width:2px;
+    class A react
+
+    classDef python stroke:#2962FF,stroke-width:2px;
+    class E python
+
+    classDef dotnet stroke:#A020F0,stroke-width:2px;
+    class D dotnet
 
     linkStyle 4,5,6 stroke-width:.2px,color:grey;
 ```
