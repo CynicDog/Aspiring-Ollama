@@ -27,7 +27,7 @@ flowchart TD
     A([React UI Client]) --> |ollamaservice:8000| B(Reverse Proxy)
     B --> |localhost:RANDOM_PORT| E([Python Ollama server])
     A --> |apiservice:8080| C(Reverse Proxy)
-    C --> |localhost:RANDOM_PORT| D([Containerized PostgreSQL])
+    C --> |localhost:RANDOM_PORT| D([.NET weather API server])
     F(Kubernetes) -. NodePort .- A 
     F -. NodePort .- D
     F -. NodePort .- E
