@@ -1,6 +1,6 @@
 #### Read more about the project in [my article](https://cynicdog.github.io/posts/azure-aspire-with-containerized-ollama/) 📰
 
-#### Architecture of AspirngOllama 
+## Architecture of AspirngOllama 
 ``` mermaid
 flowchart TD
     
@@ -29,7 +29,7 @@ flowchart TD
     linkStyle 4,5,6,7,8 stroke-width:.3px,color:grey;
 ```
 
-#### Reverse proxy details
+## Reverse proxy details
 ```mermaid
 flowchart TD
     
@@ -56,7 +56,7 @@ flowchart TD
     linkStyle 4,5,6 stroke-width:.2px,color:grey;
 ```
 
-#### Commands to deploy the app on local Kubernetes context  
+## Commands to deploy the app on local Kubernetes context  
 
 To create .NET Aspire app host manifest, which is created by running the next command in the AppHost project directory:
 
