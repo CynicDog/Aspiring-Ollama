@@ -58,7 +58,15 @@ flowchart TD
 
 ## Commands to deploy the app on local Kubernetes context  
 
-To create .NET Aspire app host manifest, which is created by running the next command in the AppHost project directory:
+You can run directly run the AppHost project with the command: 
+
+```bash
+dotnet run --project .\AspireReact.AppHost.csproj 
+```
+
+The following instructions are to deploy the project in local Kubernetes context. 
+
+First to create .NET Aspire app host manifest, which is created by running the next command in the AppHost project directory:
 
 ```bash 
 dotnet run --project ./AspireReact.AppHost.csproj --publisher manifest --output-path ./manifest.json  
