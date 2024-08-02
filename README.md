@@ -58,7 +58,7 @@ flowchart TD
 
 ## Commands to deploy the app on local Kubernetes context  
 
-You can run directly run the AppHost project with the command: 
+You can directly run the AppHost project with the command: 
 
 ```bash
 dotnet run --project .\AspireReact.AppHost.csproj 
