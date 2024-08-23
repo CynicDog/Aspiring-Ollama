@@ -1,5 +1,20 @@
 #### Read more about the project in [my article](https://cynicdog.github.io/posts/azure-aspire-with-containerized-ollama/) 📰
 
+<details>
+  <summary>First look in to the app 👀</summary>
+  <img src="https://github.com/user-attachments/assets/0411f62d-2976-4c6d-a5a4-a42440a33013"></img>
+</details>
+
+<details>
+  <summary>Aspire Dashboard 👨‍🏫</summary>
+  <img src="https://github.com/user-attachments/assets/b558e398-d955-4ccd-afbb-6a529416298e"></img>
+</details>
+
+<details>
+  <summary>Local Kubernetes deployment details ⚓</summary>
+  <img src="https://github.com/user-attachments/assets/9db18082-ad24-4e12-ab2b-33093cfb7f89"></img>
+</details>
+
 ## Architecture of AspirngOllama 
 ``` mermaid
 flowchart TD
@@ -110,18 +125,3 @@ If deployed successfully, the following report will be shown. Note that the Node
 │ react            │ NodePort     │ 10.98.14.171  │ 5173  │ 31488     │ http://localhost:31488 │
 └──────────────────┴──────────────┴───────────────┴───────┴───────────┴────────────────────────┘
 ```
-
-<details>
-  <summary>First look in to the app 👀</summary>
-  <img src="https://github.com/user-attachments/assets/0411f62d-2976-4c6d-a5a4-a42440a33013"></img>
-</details>
-
-<details>
-  <summary>Aspire Dashboard 👨‍🏫</summary>
-  <img src="https://github.com/user-attachments/assets/b558e398-d955-4ccd-afbb-6a529416298e"></img>
-</details>
-
-<details>
-  <summary>Local Kubernetes deployment details ⚓</summary>
-  <img src="https://github.com/user-attachments/assets/9db18082-ad24-4e12-ab2b-33093cfb7f89"></img>
-</details>
